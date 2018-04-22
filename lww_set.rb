@@ -31,7 +31,7 @@ class LWWSet
   def remove_later?(added_element, until_epoch=Time.now.to_i)
     # if the removal is recorded at the exact same time
     # as a addition, preference is given to addition, i.e.,
-    # an element is only deletered if there is a removal
+    # an element is only deleted if there is a removal
     # AFTER the addition's time
     removal_record = @remove_set.find do |removed_element|
       removed_element.data == added_element.data &&
