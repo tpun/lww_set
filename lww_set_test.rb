@@ -32,14 +32,17 @@ describe 'LWWSet' do
   end
 
   describe '#set' do
+    before(:each) do
+      @another_data = 'nah'
+    end
+
     it 'removes previously added element only if removal happens after' do
       @lww.add(@data, @epoch)
-      another_data = 'nah'
-      @lww.add(another_data, @epoch+10)
-      expect(@lww.set).to contain_exactly(@data, another_data)
+      @lww.add(@another_data, @epoch+10)
+      expect(@lww.set).to contain_exactly(@data, @another_data)
 
       @lww.remove(@data, @epoch+20)
-      expect(@lww.set).to contain_exactly(another_data)
+      expect(@lww.set).to contain_exactly(@another_data)
     end
 
     it 'adds previously removed element only if addition happens after' do
@@ -47,10 +50,9 @@ describe 'LWWSet' do
       @lww.remove(@data, @epoch+10)
       expect(@lww.set.size).to be(0)
 
-      another_data = 'nah'
-      @lww.add(another_data, @epoch+20)
+      @lww.add(@another_data, @epoch+20)
       @lww.add(@data, @epoch+30)
-      expect(@lww.set).to contain_exactly(@data, 'nah')
+      expect(@lww.set).to contain_exactly(@data, @another_data)
     end
 
     it 'gives bias to addition' do
