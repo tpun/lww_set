@@ -9,13 +9,13 @@ class LWWSet
     @remove_set = Set.new
   end
 
-  def add(data, timestamp=Time.now.to_i)
-    element = TimestampedElement.new(data, timestamp)
+  def add(data, epoch=Time.now.to_i)
+    element = TimestampedElement.new(data, epoch)
     @add_set.add(element)
   end
 
-  def remove(data, timestamp=Time.now.to_i)
-    element = TimestampedElement.new(data, timestamp)
+  def remove(data, epoch=Time.now.to_i)
+    element = TimestampedElement.new(data, epoch)
     @remove_set.add(element)
   end
 
@@ -34,7 +34,7 @@ class LWWSet
     # AFTER the addition's time
     removal_record = @remove_set.find do |removed_element|
       removed_element.data == added_element.data &&
-      removed_element.timestamp > added_element.timestamp
+      removed_element.epoch > added_element.epoch
     end
     removal_record != nil
   end
