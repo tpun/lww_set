@@ -7,6 +7,7 @@ describe 'LWWSet' do
     @data = 'blah'
     @epoch = Time.now.to_i/2
   end
+  
   describe '#add' do
     context 'when adding an element' do
       it 'adds to add_set' do
