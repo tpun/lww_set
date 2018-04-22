@@ -15,6 +15,8 @@ class LWWSet
   end
 
   def remove(data, timestamp=Time.now)
+    element = TimestampedElement.new(data, timestamp)
+    @remove_set.add(element)
   end
 
   def set(at=Time.now)
