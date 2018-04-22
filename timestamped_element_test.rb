@@ -15,7 +15,7 @@ describe 'TimestampedElement' do
       set = Set.new
       set.add(@element)
       set.add(@another)
-      set.should have(1).items
+      expect(set.size).to be(1)
     end
   end
 
@@ -25,7 +25,7 @@ describe 'TimestampedElement' do
       set = Set.new
       set.add(@element)
       set.delete(@another)
-      set.should have(0).items
+      expect(set.size).to be(0)
     end
   end
 end
