@@ -19,21 +19,23 @@ class LWWSet
     @remove_set.add(element)
   end
 
-  def set
+  def set(until_epoch=Time.now.to_i)
     final_elements = @add_set.select do |added_element|
-      !remove_later?(added_element)
+      added_element.epoch <= until_epoch &&
+      !remove_later?(added_element, until_epoch)
      end
     Set.new(final_elements.map(&:data))
   end
 
   private
-  def remove_later?(added_element)
+  def remove_later?(added_element, until_epoch=Time.now.to_i)
     # if the removal is recorded at the exact same time
     # as a addition, preference is given to addition, i.e.,
     # an element is only deletered if there is a removal
     # AFTER the addition's time
     removal_record = @remove_set.find do |removed_element|
       removed_element.data == added_element.data &&
+      removed_element.epoch <= until_epoch &&
       removed_element.epoch > added_element.epoch
     end
     removal_record != nil

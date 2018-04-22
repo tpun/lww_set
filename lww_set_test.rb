@@ -5,7 +5,7 @@ describe 'LWWSet' do
   before(:each) do
     @lww = LWWSet.new
     @data = 'blah'
-    @epoch = Time.now -  1000
+    @epoch = Time.now.to_i/2
   end
   describe '#add' do
     context 'when adding an element' do
@@ -53,6 +53,14 @@ describe 'LWWSet' do
       @lww.add(@another_data, @epoch+20)
       @lww.add(@data, @epoch+30)
       expect(@lww.set).to contain_exactly(@data, @another_data)
+    end
+
+    it 'ignores events past given epoch' do
+      @lww.add(@data, @epoch)
+      @lww.add(@another_data, @epoch+10)
+      @lww.remove(@another_data, @epoch+50)
+      expect(@lww.set(@epoch+40)).to contain_exactly(@data, @another_data)
+      expect(@lww.set(@epoch+60)).to contain_exactly(@data)
     end
 
     it 'gives bias to addition' do
