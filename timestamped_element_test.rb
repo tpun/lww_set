@@ -1,4 +1,5 @@
 require 'rspec'
+require 'set'
 require_relative './timestamped_element'
 
 describe 'TimestampedElement' do
@@ -8,14 +9,13 @@ describe 'TimestampedElement' do
     @element = TimestampedElement.new(@data, @timestamp)
   end
 
-  describe '#index' do
-    it 'generates an index using TimestampedElementIndex' do
-      @element.index.should eq(TimestampedElementIndex.generate(@data, @timestamp))
+  context 'when inserting into a set' do
+    it 'object with the same data and timestamp is considered identical' do
+      @another = TimestampedElement.new(@element.data, @element.timestamp)
+      set = Set.new
+      set.add(@element)
+      set.add(@another)
+      set.should have(1).items
     end
-  end
-
-  context 'when comparing' do
-    it 'is equal when both have same data and timestamp'
-    it 'sorts by timestamp'
   end
 end
