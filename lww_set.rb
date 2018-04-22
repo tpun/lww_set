@@ -1,4 +1,5 @@
 require 'set'
+require_relative './timestamped_element'
 
 class LWWSet
   attr_reader :add_set, :remove_set
@@ -9,6 +10,8 @@ class LWWSet
   end
 
   def add(data, timestamp=Time.now)
+    element = TimestampedElement.new(data, timestamp)
+    @add_set.add(element)
   end
 
   def remove(data, timestamp=Time.now)

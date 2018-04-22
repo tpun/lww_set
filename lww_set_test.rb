@@ -3,8 +3,23 @@ require_relative './lww_set'
 
 describe 'LWWSet' do
   describe '#add' do
-    it 'adds element to add_set'
-    it 'is idempotent'
+    context 'when adding an element' do
+      before(:each) do
+        @lww = LWWSet.new
+        @data = 'blah'
+        @timestamp = 10000
+        @lww.add(@data, @timestamp)
+      end
+
+      it 'adds to add_set' do
+        @lww.add_set.should have(1).items
+      end
+
+      it 'is idempotent' do
+        @lww.add(@data, @timestamp)
+        @lww.add_set.should have(1).items
+      end
+    end
   end
 
   describe '#remove' do
