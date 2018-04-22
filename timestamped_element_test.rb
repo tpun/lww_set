@@ -18,4 +18,14 @@ describe 'TimestampedElement' do
       set.should have(1).items
     end
   end
+
+  context 'when deleting from a set' do
+    it 'object with the same data and timestamp is considered identical' do
+      @another = TimestampedElement.new(@element.data, @element.timestamp)
+      set = Set.new
+      set.add(@element)
+      set.delete(@another)
+      set.should have(0).items
+    end
+  end
 end
