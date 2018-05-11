@@ -3,8 +3,11 @@ require_relative './timestamped_element'
 
 class LWWSet
   attr_reader :add_set, :remove_set
+  BIAS_ADDS = 0
+  BIAS_REMOVALS = 1
 
-  def initialize
+  def initialize(bias=BIAS_ADDS)
+    @bias = bias
     @add_set = Set.new
     @remove_set = Set.new
   end
@@ -36,8 +39,19 @@ class LWWSet
     removal_record = @remove_set.find do |removed_element|
       removed_element.data == added_element.data &&
       removed_element.epoch <= until_epoch &&
-      removed_element.epoch > added_element.epoch
+      remove_by_bias?(added_element.epoch, removed_element.epoch, @bias)
     end
     removal_record != nil
+  end
+
+  def remove_by_bias?(addition_epoch, removal_epoch, bias)
+    case bias
+    when BIAS_ADDS
+      return removal_epoch > addition_epoch
+    when BIAS_REMOVALS
+      return removal_epoch >= addition_epoch
+    else
+      raise "Unknown bias: " + bias.to_s
+    end
   end
 end

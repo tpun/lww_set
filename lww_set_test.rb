@@ -7,7 +7,7 @@ describe 'LWWSet' do
     @data = 'blah'
     @epoch = Time.now.to_i/2
   end
-  
+
   describe '#add' do
     context 'when adding an element' do
       it 'adds to add_set' do
@@ -64,10 +64,16 @@ describe 'LWWSet' do
       expect(@lww.set(@epoch+60)).to contain_exactly(@data)
     end
 
-    it 'gives bias to addition' do
-      @lww.add(@data, @epoch)
-      @lww.remove(@data, @epoch)
-      expect(@lww.set).to contain_exactly(@data)
+    it 'honors bias on same-time events' do
+      lww_bias_add = LWWSet.new(LWWSet::BIAS_ADDS)
+      lww_bias_add.add(@data, @epoch)
+      lww_bias_add.remove(@data, @epoch)
+      expect(lww_bias_add.set).to contain_exactly(@data)
+
+      lww_bias_removal = LWWSet.new(LWWSet::BIAS_REMOVALS)
+      lww_bias_removal.add(@data, @epoch)
+      lww_bias_removal.remove(@data, @epoch)
+      expect(lww_bias_removal.set).to be_empty
     end
 
     it 'returns a set' do
