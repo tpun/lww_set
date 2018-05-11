@@ -1,7 +1,8 @@
 require 'set'
-require_relative './timestamped_element'
 
 class LWWSet
+  TimestampedElement = Struct.new(:data, :epoch)
+
   attr_reader :add_set, :remove_set
   BIAS_ADDS = 0
   BIAS_REMOVALS = 1
