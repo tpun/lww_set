@@ -8,6 +8,12 @@ describe 'LWWSet' do
     @epoch = Time.now.to_i/2
   end
 
+  describe '.initialize' do
+    it 'raises an error if bias is not one of BIAS_ADDS or BIAS_REMOVALS' do
+      expect{ LWWSet.new(100) }.to raise_error(/Invalid bias:/)
+    end
+  end
+
   describe '#add' do
     context 'when adding an element' do
       it 'adds to add_set' do
