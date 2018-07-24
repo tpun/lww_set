@@ -38,6 +38,19 @@ describe 'LWWSet' do
     end
   end
 
+  describe '#merge' do
+    context 'when merging with another set' do
+      it 'merges both add and remove sets from the other' do
+        @lww.add(@data, @epoch)
+        another = LWWSet.new()
+        another.remove(@data, @epoch+10)
+
+        @lww.merge(another)
+        expect(@lww.set.size).to be(0)
+      end
+    end
+  end
+
   describe '#set' do
     before(:each) do
       @another_data = 'nah'

@@ -24,6 +24,11 @@ class LWWSet
     @remove_set.add(element)
   end
 
+  def merge(another)
+    @add_set.merge(another.add_set)
+    @remove_set.merge(another.remove_set)
+  end
+
   def set(until_epoch=Time.now.to_i)
     final_elements = @add_set.select do |added_element|
       added_element.epoch <= until_epoch &&
